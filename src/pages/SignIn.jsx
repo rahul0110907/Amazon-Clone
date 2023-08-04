@@ -3,7 +3,6 @@ import Logo from "../assets/darkLogo.png";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import {RotatingLines} from 'react-loader-spinner'
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "../store/slice";
 
@@ -20,7 +19,7 @@ const SignIn = () => {
     const[userEmailErr,setUserEmailError]=useState('');
     const[userPasswordError,setUserPasswordError]=useState('');
 
-    const [loading, setLoading] = useState(false);
+   
     const [successMessage, setSuccessMessage] = useState("");
     const handleEmail = (e) => {
         setEmail(e.target.value);
@@ -42,7 +41,7 @@ const SignIn = () => {
         setErrPassword("Enter your password");
       }
       if (email && password) {
-        setLoading(true);
+      
         signInWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
     // Signed in 
@@ -54,8 +53,6 @@ const SignIn = () => {
         email:user.email
       }
     ))
-    
-    setLoading(false);
    setSuccessMessage('Login SuccessFully , Welcome Back to amazon')
    setTimeout(()=>{
       navigate('/')
@@ -158,17 +155,7 @@ active:bg-gradient-to-bl  active:from-yellow-400 active:to-yellow-500 duration-2
                 Continue
               </button>
 
-              {loading && (
-                <div className="flex justify-center">
-                  <RotatingLines
-                    strokeColor="grey"
-                    strokeWidth="5"
-                    animationDuration="0.75"
-                    width="96"
-                    visible={true}
-                  />
-                </div>
-              )}
+             
             </div>
             <p className="text-xs text-black leading-4 mt-4">
               By continuing, you agree to Amazon's{" "}
