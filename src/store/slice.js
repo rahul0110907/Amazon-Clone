@@ -2,13 +2,14 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
  products:[],
- userInfo:[]
+ userInfo:[],
 }
 
 export const cartSlice = createSlice({
   name: 'amazon',
   initialState,
   reducers: {
+
    addToCart: (state,action) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,

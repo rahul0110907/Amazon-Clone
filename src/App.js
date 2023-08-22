@@ -7,6 +7,7 @@ import Home from './components/home/Home';
 import Cart from './pages/Cart';
 import SignIn from './pages/SignIn';
 import Registeration from './pages/Registeration';
+import PaymentPage from './components/PaymentPage';
 
 
 
@@ -21,6 +22,7 @@ function App() {
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/signIn' element={<SignIn/>}/>
         <Route path='/Registeration' element={<Registeration/>}/>
+        <Route path='/PaymentPage' element={<PaymentPage/>}/>
        </Routes>    
   
       </BrowserRouter>

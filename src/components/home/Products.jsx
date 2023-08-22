@@ -4,17 +4,26 @@ import ApiIcon from '@mui/icons-material/Api';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import {useDispatch} from 'react-redux'
+import {useDispatch,useSelector} from 'react-redux'
 import { addToCart } from "../../store/slice";
+import { ToastContainer, toast } from 'react-toastify';
+import {  useNavigate } from "react-router-dom";
+
+
+import 'react-toastify/dist/ReactToastify.css';
 const Products = () => {
   const [data, setData] = useState([]);
   const dispatch = useDispatch()
+  const userInfo = useSelector((state) => state.amazon.userInfo);
+
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const res = await fetch("https://fakestoreapi.com/products");
     const result = await res.json();
     setData(result);
   };
+
 
   useEffect(() => {
     fetchData();
@@ -23,6 +32,28 @@ const Products = () => {
   return (
     <div className="max-w-screen-2xl grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4  gap-5 xl:gap-10 px-4 mx-auto">
       {data?.map((item) => {
+        const cartHandler =()=>{
+          if(userInfo){
+            dispatch(addToCart({
+              title:item.title,
+              price:item.price,
+              description:item.description,
+              image:item.image,
+              quantity:1,
+              id:item.id,
+              category:item.category
+            }))
+           toast(`${item.title.substring(0,15)} add to cart successfully`);
+          }
+          else{
+            toast("Please Login First ")
+            setTimeout(()=>{
+              navigate('/SignIn')
+            },2000)
+          }
+         
+        
+        }
         return (
           <div
             key={item.id}
@@ -64,18 +95,23 @@ const Products = () => {
                   <StarIcon />
                 </div>
               </div>
-              <button onClick={()=>dispatch(addToCart({
-                title:item.title,
-                price:item.price,
-                description:item.description,
-                image:item.image,
-                quantity:1,
-                id:item.id,
-                category:item.category
-              }))} className="w-full font-titleFont font-medium text-base bg-gradient-to-tr from-yellow-400 to-yellow-200
+             
+              <button onClick={cartHandler} className="w-full font-titleFont font-medium text-base bg-gradient-to-tr from-yellow-400 to-yellow-200
               hover:from-yellow-300 hover:to-yellow-500 border-yellow-500 hover:border-yellow-700 active:bg-gradient-to-bl 
                active:from-yellow-400 active:to-yellow-500 duration-200 py-1.5 rounded-md mt-3">Add to Cart</button>
             </div>
+             <ToastContainer
+position="bottom-left"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="dark"
+/>
           </div>
         );
       })}

@@ -3,15 +3,26 @@ import { useDispatch, useSelector } from "react-redux";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import emptyCart from '../assets/emptyCart.png'
 import {motion} from 'framer-motion'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import {deleteCartItem,resetCart,decrementQuantity,incrementQuantity}from '../store/slice'
 import Header from '../components/Header/Header'
 import Footer from '../components/footer/Footer'
+import { ToastContainer, toast } from 'react-toastify';
+
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const Cart = () => {
+
+
+  const navigate = useNavigate();
+
   const product = useSelector((state) => state.amazon.products);
+  const userInfo = useSelector((state) => state.amazon.userInfo);
   const [totalPrice,setTotalPrice]=useState(0);
   const dispatch = useDispatch();
+
+  const[paynow,setPaynow]=useState(false);
   useEffect(()=>{
 
     let total=0;
@@ -19,8 +30,18 @@ const Cart = () => {
         total+=item.quantity*item.price;
         return setTotalPrice(total);
     },[product]);
-
   })
+  const handleCheckout =()=>{
+    if(userInfo){
+      setPaynow(true)
+    }else{
+      toast.error('Please log-in first for Buy Products');
+    }
+      }
+
+      const handlePaynow =()=>{
+         navigate('/PaymentPage');
+      }
   return (
     <>
     <Header/>
@@ -120,9 +141,28 @@ const Cart = () => {
                 Total: <span className="text-lg font-bold">${(totalPrice).toFixed(2)}</span>
               </p>
             </div>
-            <button className="w-full font-titleFont font-medium text-base bg-gradient-to-tr from-yellow-400 to-yellow-200 border hover:from-yellow-300 hover:to-yellow-400 border-yellow-500 hover:border-yellow-700 active:bg-gradient-to-bl active:from-yellow-400 active:to-yellow-500 duration-200 py-1.5 rounded-md mt-3">
+            <button onClick={handleCheckout} className="w-full font-titleFont font-medium text-base bg-gradient-to-tr from-yellow-400 to-yellow-200 border hover:from-yellow-300 hover:to-yellow-400 border-yellow-500 hover:border-yellow-700 active:bg-gradient-to-bl active:from-yellow-400 active:to-yellow-500 duration-200 py-1.5 rounded-md mt-3">
               Proceed to Buy
             </button>
+            {
+              paynow &&(
+                <div onClick={handlePaynow} className="w-full font-titleFont flex justify-center items-center font-medium text-base bg-gradient-to-tr from-yellow-400 to-yellow-200 border hover:from-yellow-300 hover:to-yellow-400 border-yellow-500 hover:border-yellow-700 active:bg-gradient-to-bl active:from-yellow-400 active:to-yellow-500 duration-200 py-1.5 rounded-md mt-3">
+                  Pay now 
+                </div>
+              )
+            }
+            <ToastContainer
+position="bottom-left"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="colored"
+/>
           </div>
         </div>
       </div>

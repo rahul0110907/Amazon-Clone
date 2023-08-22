@@ -8,12 +8,16 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { dropDownItems } from "./Index";
 import HeaderBottam from "./HeaderBottam";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { userSignOut } from "../../store/slice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Header = () => {
+
   const auth = getAuth();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const product = useSelector((state) => state.amazon.products);
   const userInfo = useSelector((state) => state.amazon.userInfo);
@@ -27,9 +31,17 @@ const Header = () => {
         dispatch(userSignOut());
       })
       .catch((error) => {
-        // An error happened.
+        console.log(error);
       });
   };
+  const cartbuttonHandler=()=>{
+      if(userInfo){
+        navigate('/Cart')
+      }
+      else{
+        toast.error('Please log-in first for use Cart');
+      }
+  }
 
   return (
     <div className="w-full sticky top-0 z-50">
@@ -129,24 +141,39 @@ const Header = () => {
             & orders
           </p>
         </div>
-        <Link to="/cart">
-          <div
+        
+        {/* <Link to="/cart"> */}
+          <div onClick={cartbuttonHandler}
             className="flex relative items-start justify-center px-2 h-[80%] border border-transparent
         hover:border-white cursor-pointer duration-100"
           >
             <ShoppingCartIcon />
             <p className="text-xs font-semibold mt-3 text-whiteText">
               cart
-              <span
+              {
+                userInfo?<span
                 className=" absolute text-xs -top-1 left-6 font-semibold p-1
                     h-4 bg-[#f3a847] text-amazon_blue rounded-full flex
                      justify-center items-center"
               >
                 {product.length > 0 ? product.length : 0}
-              </span>
+              </span>:''
+              }
             </p>
           </div>
-        </Link>
+          <ToastContainer
+position="bottom-left"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="colored"
+/>
+        {/* </Link> */}
         {userInfo && (
           <div
             onClick={handlerLogOut}

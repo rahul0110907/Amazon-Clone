@@ -61,9 +61,18 @@ const SignIn = () => {
   })
   .catch((error) => {
     const errorCode = error.code;
-
-    if (errorCode.includes("auth/invalid-email")) {
+    const errorMessage = error.message;
+    // setMode("INCORRECT");
+    console.log(errorCode, errorMessage);
+    
+    if(errorCode.includes("auth/invalid-email")){
       setUserEmailError("Invalid Email");
+    }
+    else if(errorCode.includes("auth/user-not-found")){
+      setUserEmailError("User not found . Please Register first");
+     setTimeout(()=>{
+      navigate('/Registeration')
+     },5000) 
     }
     if (errorCode.includes("auth/wrong-password")) {
       setUserPasswordError("Wrong Password ! try again");
@@ -97,7 +106,7 @@ const SignIn = () => {
 
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-2">
-                <p className="text-sm font-medium">Email or Mobile Number</p>
+                <p className="text-sm font-medium">Enter  Email Address </p>
                 <input onChange={handleEmail}
                   type="email"
                   className="w-full lowercase py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none
@@ -122,7 +131,7 @@ const SignIn = () => {
 
               </div>
               <div className="flex flex-col gap-2">
-                <p className="text-sm font-medium">Password</p>
+                <p className="text-sm font-medium"> Enter your Password</p>
                 <input onChange={handlePassword}
                   type="password"
                   className="w-full lowercase py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none
